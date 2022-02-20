@@ -1,0 +1,26 @@
+{
+    "name": "aml",
+    "author": "Ondrej Marsalek and Christoph Schran",
+    "author_email": "AuthorsEmails",
+    "description": "AML",
+    "url": "https://github.com/MarsalekGroup/aml",
+    "license": "GNU General Public License v3.0",
+    "version": "0.5.1",
+    "install_requires": [
+        "scipy",
+        "numpy",
+        "mdtraj",
+        "matplotlib"
+    ],   
+    "data_files": [
+        [".", ["setup.json"]]
+    ],
+    "extras_require": {
+	    "pre-commit": [
+		    "pre-commit==2.0.1",
+		    "yapf==0.28.0",
+		    "prospector==1.2.0",
+            "pylint==2.4.4"
+        ]
+    }
+}
