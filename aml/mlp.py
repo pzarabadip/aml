@@ -76,7 +76,7 @@ class MLPProcess(MLP):
 
         return model
 
-    def __init__(self, elements, n, dir_run='.', n_tasks=1, remove_output=False):
+    def __init__(self, elements, n, dir_run='.', n_tasks=1, n_nodes=1, remove_output=False):
         """Process-based machine learning potential.
 
         Arguments:
@@ -84,6 +84,7 @@ class MLPProcess(MLP):
             n:
             dir_run:
             n_tasks:
+            n_nodes:
             remove_output:
         """
 
@@ -101,6 +102,8 @@ class MLPProcess(MLP):
         if n % n_tasks != 0:
             raise ValueError('Number of simultaneous tasks does not divide the number of committee members.')
         self.n_batch = n // n_tasks
+        n_nodes = int(n_nodes)
+        self.n_nodes = n_nodes
 
         self.remove_output = remove_output
 
@@ -315,6 +318,7 @@ class N2P2(MLPProcess):
         exclude_triples=None,
         dir_run='.',
         n_tasks=1,
+        n_nodes=1,
         n_core_task=1,
         node_size=None,
         remove_output=False
@@ -340,7 +344,7 @@ class N2P2(MLPProcess):
             remove_output: whether to remove training and prediction run directories
         """
 
-        super().__init__(elements, n, dir_run, n_tasks, remove_output)
+        super().__init__(elements, n, dir_run, n_tasks, n_nodes, remove_output)
 
         # save list of pairs and triples to exclude from ACSF generation
         self.exclude_pairs = exclude_pairs
@@ -493,6 +497,8 @@ class N2P2(MLPProcess):
         details = False
         cmd_mpi = prepare_command_mpi(
             i_task,
+            n_tasks=self.n_tasks,
+            n_nodes=self.n_nodes,
             n_core_task=self.n_core_task,
             node_size=self.node_size,
             mode=self.mode,

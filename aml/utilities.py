@@ -75,6 +75,8 @@ def write_rankfile_openmpi(fn, job_index: int, job_size: int, node_size: int):
 
 def prepare_command_mpi(
     i_task: int,
+    n_tasks:int,
+    n_nodes:int,
     n_core_task: int = 1,
     node_size: int = 1,
     mode: str = 'serial',
@@ -120,7 +122,8 @@ def prepare_command_mpi(
                 msg = f'{node_size:d} cores on one node not enough for task {i_task:d} on {n_core_task:d} cores.'
                 raise ValueError(msg)
         cpu_set = f'{i_task*n_core_task}-{(i_task+1)*n_core_task-1}'
-        cmd_mpi = f'mpirun --np {n_core_task:d} --bind-to cpulist:ordered --map-by hwthread --cpu-set {cpu_set:s}'
+        #cmd_mpi = f'mpirun --np {n_core_task:d} --bind-to cpulist:ordered --map-by hwthread --cpu-set {cpu_set:s}'
+        cmd_mpi = 'maskcpu=$(genmaskcpu ' + f'{n_core_task:d} {i_task+1:d} {n_tasks:d} 1); srun --cpu-bind=mask_cpu:' +'${maskcpu} ' +f'--nodes=1 --ntasks={n_core_task:d} --tasks-per-node={n_core_task:d} --cpus-per-task=1 --oversubscribe --mem=30500M'
 
     elif mode == 'OpenMPI-multi':
 
